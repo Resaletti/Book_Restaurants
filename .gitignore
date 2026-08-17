@@ -1,0 +1,18 @@
+# Arquivos que não irão para o GitHub
+README.md
+supabase-schema.sql
+
+# VS Code
+.vscode/
+
+# Node
+node_modules/
+
+# Python
+venv/
+.venv/
+__pycache__/
+
+# Sistema
+.DS_Store
+Thumbs.db
