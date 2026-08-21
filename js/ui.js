@@ -2,6 +2,10 @@
 const grid = document.getElementById('grid');
 const toastEl = document.getElementById('toast');
 const panel = document.getElementById('panel');
+const categorySelect = document.getElementById('categorySelect');
+const filtersBar = document.getElementById('filtersBar');
+const cuisineFilterRow = document.getElementById('cuisineFilterRow');
+const activeCatLabel = document.getElementById('activeCatLabel');
 
 function showToast(msg){
   toastEl.textContent = msg;
@@ -9,16 +13,16 @@ function showToast(msg){
   setTimeout(()=>toastEl.classList.remove('show'), 2500);
 }
 
-function closePanel(){ 
-    panel.classList.remove('open'); 
-    editingId = null; 
+function closePanel(){
+    panel.classList.remove('open');
+    editingId = null;
 }
 
 function resetForm(){
   document.getElementById('fName').value='';
   document.getElementById('fUrl').value='';
   document.getElementById('fDesc').value='';
-  formState = { cat:null, price:0, stars:0, status:null };
+  formState = { cat:null, price:0, stars:0, status:null, cuisine:null };
   refreshPillStates();
 }
 
@@ -37,14 +41,55 @@ function refreshPillStates(){
   document.querySelectorAll('#starRow .star').forEach(s=>{
     s.classList.toggle('filled', Number(s.dataset.star)<=formState.stars);
   });
+
+  // campo de cozinha só aparece quando a categoria escolhida é Restaurante
+  const cuisineField = document.getElementById('cuisineField');
+  cuisineField.style.display = formState.cat === 'restaurante' ? 'block' : 'none';
+  document.querySelectorAll('#cuisineRow .pill').forEach(b=>{
+    b.classList.toggle('active', b.dataset.cuisine===formState.cuisine);
+  });
+}
+
+// ---------- navegação por categoria (tela inicial) ----------
+function selectCategory(cat){
+  currentFilter = cat;
+  currentCuisine = 'todas';
+  categorySelect.style.display = 'none';
+  filtersBar.style.display = 'block';
+  activeCatLabel.textContent = catLabel(cat);
+  cuisineFilterRow.style.display = cat === 'restaurante' ? 'flex' : 'none';
+  document.querySelectorAll('#cuisineFilterRow .pill').forEach(b=>{
+    b.classList.toggle('active', b.dataset.cuisine === 'todas');
+  });
+  render();
+}
+
+function backToCategories(){
+  currentFilter = null;
+  currentCuisine = 'todas';
+  categorySelect.style.display = 'block';
+  filtersBar.style.display = 'none';
+  closePanel();
+  render();
 }
 
 function render(){
-  const filtered = currentFilter==='todos' ? places : places.filter(p=>p.category===currentFilter);
+  if(!currentFilter){
+    grid.style.display = 'none';
+    grid.innerHTML = '';
+    return;
+  }
+  grid.style.display = 'flex';
+
+  let filtered = places.filter(p => p.category === currentFilter);
+  if(currentFilter === 'restaurante' && currentCuisine && currentCuisine !== 'todas'){
+    filtered = filtered.filter(p => (p.cuisine || 'outros') === currentCuisine);
+  }
+
   document.getElementById('countLabel').textContent = filtered.length + (filtered.length===1?' lugar':' lugares');
 
   if(filtered.length===0){
-    grid.innerHTML = '<div class="empty"><div class="big">Ainda não tem nada aqui</div>Adicione o primeiro lugar que a família quer conhecer.</div>';
+    grid.innerHTML = '<div class="empty"><div class="big">Ainda não tem nada aqui</div>Adicione o primeiro lugar dessa categoria.</div>';
     return;
   }
 
@@ -53,10 +98,11 @@ function render(){
     const price = priceLabel(p.price);
     const stars = p.stars>0 ? '★'.repeat(p.stars)+'☆'.repeat(5-p.stars) : '';
     const date = p.created_at ? new Date(p.created_at).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'}) : '';
+    const cuisineBadge = (p.category==='restaurante' && p.cuisine) ? `<span class="ticket-cuisine">${cuisineLabel(p.cuisine)}</span>` : '';
     return `
     <div class="ticket cat-${p.category}" data-id="${p.id}">
       <div class="ticket-main">
-        <span class="ticket-cat">${catLabel(p.category)}</span>
+        <span class="ticket-cat">${catLabel(p.category)}</span>${cuisineBadge}
         <div class="ticket-name">${p.url ? `<a href="${escapeAttr(p.url)}" target="_blank" rel="noopener">${escapeHtml(p.name)}</a>` : escapeHtml(p.name)}</div>
         ${p.description ? `<div class="ticket-desc">${escapeHtml(p.description)}</div>` : ''}
         ${stars ? `<div class="ticket-stars">${stars}</div>` : ''}
@@ -81,15 +127,22 @@ function escapeHtml(s){
 }
 
 function escapeAttr(s){
-    return escapeHtml(s); 
+    return escapeHtml(s);
 }
 
-function catLabel(c){ 
-    return {restaurante:'Restaurante', bar:'Bar', atracao:'Atração'}[c] || c; 
+function catLabel(c){
+    return {restaurante:'Restaurante', bar:'Bar', atracao:'Atração'}[c] || c;
 }
 
-function priceLabel(p){ 
-    return p>0 ? '$'.repeat(p) : null; 
+function cuisineLabel(c){
+    return {
+      japonesa:'Japonesa', italiana:'Italiana', brasileira:'Brasileira',
+      hamburgueria:'Hamburgueria', pizzaria:'Pizzaria', outros:'Outros'
+    }[c] || c;
+}
+
+function priceLabel(p){
+    return p>0 ? '$'.repeat(p) : null;
 }
 
 function statusInfo(s){

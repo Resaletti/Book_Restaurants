@@ -179,6 +179,72 @@ h1{
 .btn-ghost:hover{background:#f2ead4;}
 .btn:disabled{opacity:0.5; cursor:not-allowed;}
 
+/* tela inicial: escolha de categoria */
+.category-select{
+  text-align:center;
+  padding:48px 10px 24px;
+}
+.category-prompt{
+  font-family:'Fraunces',serif;
+  font-size:clamp(18px,3.5vw,22px);
+  color:var(--paper);
+  margin-bottom:20px;
+}
+.category-buttons{
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.cat-btn{
+  flex:1 1 160px;
+  max-width:220px;
+  background:var(--paper);
+  color:var(--text);
+  border:none;
+  border-bottom:5px solid transparent;
+  border-radius:16px;
+  padding:30px 18px 24px;
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:17px;
+  line-height:1.7;
+  cursor:pointer;
+  box-shadow:0 6px 18px rgba(0,0,0,0.22);
+  transition:transform .12s ease;
+}
+.cat-btn:hover{transform:translateY(-3px);}
+.cat-btn.cat-restaurante{border-bottom-color:var(--rust);}
+.cat-btn.cat-bar{border-bottom-color:var(--blue);}
+.cat-btn.cat-atracao{border-bottom-color:var(--green);}
+
+/* barra de filtros depois de escolher categoria */
+.filters-bar{margin-bottom:18px;}
+.filters-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.back-btn{
+  background:var(--ink-2);
+  color:var(--paper);
+  border:1px solid rgba(241,232,214,0.18);
+  border-radius:100px;
+  padding:8px 14px;
+  font-size:13px;
+  font-family:'Inter',sans-serif;
+  cursor:pointer;
+}
+.back-btn:hover{background:#2C4652;}
+.active-cat-label{
+  font-family:'Fraunces',serif;
+  font-weight:600;
+  font-size:17px;
+  color:var(--gold);
+}
+
 .filters{display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; align-items:center;}
 .filters .pill{background:var(--ink-2); border-color:rgba(241,232,214,0.18); color:var(--paper);}
 .filters .pill.active{background:var(--gold); border-color:var(--gold); color:var(--ink);}
@@ -207,6 +273,19 @@ h1{
 .cat-restaurante .ticket-cat{background:var(--rust);}
 .cat-bar .ticket-cat{background:var(--blue);}
 .cat-atracao .ticket-cat{background:var(--green);}
+
+.ticket-cuisine{
+  display:inline-block;
+  font-family:'Space Mono',monospace;
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:0.04em;
+  color:var(--text-soft);
+  background:#EFE4C8;
+  padding:4px 9px;
+  border-radius:5px;
+  margin-left:6px;
+}
 
 .ticket-name{font-family:'Fraunces',serif; font-weight:600; font-size:19px; color:var(--text); margin-bottom:4px;}
 .ticket-name a{color:inherit; text-decoration:none; border-bottom:1.5px solid var(--gold-dark);}

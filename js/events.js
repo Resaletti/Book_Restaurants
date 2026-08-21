@@ -11,6 +11,12 @@ document.getElementById('cancelBtn').addEventListener('click', closePanel);
 document.getElementById('catRow').addEventListener('click', e=>{
   const b = e.target.closest('.pill'); if(!b) return;
   formState.cat = formState.cat===b.dataset.cat ? null : b.dataset.cat;
+  if(formState.cat !== 'restaurante'){ formState.cuisine = null; }
+  refreshPillStates();
+});
+document.getElementById('cuisineRow').addEventListener('click', e=>{
+  const b = e.target.closest('.pill'); if(!b) return;
+  formState.cuisine = formState.cuisine===b.dataset.cuisine ? null : b.dataset.cuisine;
   refreshPillStates();
 });
 document.getElementById('priceRow').addEventListener('click', e=>{
@@ -42,6 +48,7 @@ document.getElementById('saveBtn').addEventListener('click', async ()=>{
   const payload = {
     name, url, description: desc,
     category: formState.cat,
+    cuisine: formState.cat === 'restaurante' ? formState.cuisine : null,
     price: formState.price,
     stars: formState.stars,
     status: formState.status
@@ -62,7 +69,7 @@ document.getElementById('saveBtn').addEventListener('click', async ()=>{
   loadPlaces();
 });
 
-// ---------- rendering ----------
+// ---------- itens da lista ----------
 grid.addEventListener('click', async (e)=>{
   const btn = e.target.closest('.icon-btn');
   if(!btn) return;
@@ -85,14 +92,14 @@ grid.addEventListener('click', async (e)=>{
     document.getElementById('fName').value = p.name;
     document.getElementById('fUrl').value = p.url || '';
     document.getElementById('fDesc').value = p.description || '';
-    formState = { cat:p.category, price:p.price||0, stars:p.stars||0, status:p.status||null };
+    formState = { cat:p.category, price:p.price||0, stars:p.stars||0, status:p.status||null, cuisine:p.cuisine||null };
     refreshPillStates();
     panel.classList.add('open');
     panel.scrollIntoView({behavior:'smooth', block:'start'});
   }else if(action==='share'){
     const st = statusInfo(p.status);
     const price = priceLabel(p.price);
-    let text = `📍 ${p.name} (${catLabel(p.category)})\n`;
+    let text = `📍 ${p.name} (${catLabel(p.category)}${p.cuisine ? ' - '+cuisineLabel(p.cuisine) : ''})\n`;
     if(price) text += `💰 ${price}\n`;
     if(p.stars) text += `⭐ ${p.stars}/5\n`;
     text += `🔁 Voltaríamos: ${st.label}\n`;
@@ -113,11 +120,18 @@ grid.addEventListener('click', async (e)=>{
   }
 });
 
-// ---------- filters ----------
-document.getElementById('filters').addEventListener('click', e=>{
+// ---------- navegação: tela inicial de categorias ----------
+document.getElementById('categorySelect').addEventListener('click', e=>{
+  const b = e.target.closest('.cat-btn'); if(!b) return;
+  selectCategory(b.dataset.filter);
+});
+document.getElementById('backBtn').addEventListener('click', backToCategories);
+
+// ---------- subcategoria (tipo de cozinha) na listagem ----------
+document.getElementById('cuisineFilterRow').addEventListener('click', e=>{
   const b = e.target.closest('.pill'); if(!b) return;
-  currentFilter = b.dataset.filter;
-  document.querySelectorAll('#filters .pill').forEach(x=>x.classList.toggle('active', x===b));
+  currentCuisine = b.dataset.cuisine;
+  document.querySelectorAll('#cuisineFilterRow .pill').forEach(x=>x.classList.toggle('active', x===b));
   render();
 });
 

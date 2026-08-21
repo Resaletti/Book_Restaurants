@@ -53,6 +53,18 @@
       </div>
     </div>
 
+    <div class="field" id="cuisineField" style="display:none">
+      <label>Tipo de cozinha</label>
+      <div class="pill-row" id="cuisineRow">
+        <button class="pill" data-cuisine="japonesa">Japonesa</button>
+        <button class="pill" data-cuisine="italiana">Italiana</button>
+        <button class="pill" data-cuisine="brasileira">Brasileira</button>
+        <button class="pill" data-cuisine="hamburgueria">Hamburgueria</button>
+        <button class="pill" data-cuisine="pizzaria">Pizzaria</button>
+        <button class="pill" data-cuisine="outros">Outros</button>
+      </div>
+    </div>
+
     <div class="field">
       <label>Descrição / notas</label>
       <textarea id="fDesc" rows="3" placeholder="O que achamos, o que pedir, dica de horário..."></textarea>
@@ -94,17 +106,35 @@
     </div>
   </div>
 
-  <div class="filters" id="filters">
-    <button class="pill active" data-filter="todos">Todos</button>
-    <button class="pill" data-filter="restaurante">Restaurantes</button>
-    <button class="pill" data-filter="bar">Bares</button>
-    <button class="pill" data-filter="atracao">Atrações</button>
-    <span class="count" id="countLabel"></span>
+  <!-- Tela inicial: só as 3 categorias, sem lista -->
+  <div class="category-select" id="categorySelect">
+    <p class="category-prompt">O que vocês estão procurando?</p>
+    <div class="category-buttons">
+      <button class="cat-btn cat-restaurante" data-filter="restaurante">🍽️<br>Restaurantes</button>
+      <button class="cat-btn cat-bar" data-filter="bar">🍸<br>Bares</button>
+      <button class="cat-btn cat-atracao" data-filter="atracao">🎡<br>Atrações</button>
+    </div>
   </div>
 
-  <div class="grid" id="grid">
-    <div class="empty"><div class="big">Carregando...</div></div>
+  <!-- Aparece só depois de escolher uma categoria -->
+  <div class="filters-bar" id="filtersBar" style="display:none">
+    <div class="filters-top">
+      <button class="back-btn" id="backBtn">← Categorias</button>
+      <span class="active-cat-label" id="activeCatLabel"></span>
+      <span class="count" id="countLabel"></span>
+    </div>
+    <div class="filters" id="cuisineFilterRow" style="display:none">
+      <button class="pill active" data-cuisine="todas">Todas</button>
+      <button class="pill" data-cuisine="japonesa">Japonesa</button>
+      <button class="pill" data-cuisine="italiana">Italiana</button>
+      <button class="pill" data-cuisine="brasileira">Brasileira</button>
+      <button class="pill" data-cuisine="hamburgueria">Hamburgueria</button>
+      <button class="pill" data-cuisine="pizzaria">Pizzaria</button>
+      <button class="pill" data-cuisine="outros">Outros</button>
+    </div>
   </div>
+
+  <div class="grid" id="grid" style="display:none"></div>
 </div>
 
 <div class="toast" id="toast"></div>
