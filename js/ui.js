@@ -136,7 +136,7 @@ function catLabel(c){
 
 function cuisineLabel(c){
     return {
-      japonesa:'Japonesa', italiana:'Italiana', brasileira:'Brasileira',
+      japonesa:'Comida Oriental', italiana:'Italiana', brasileira:'Brasileira',
       hamburgueria:'Hamburgueria', pizzaria:'Pizzaria', outros:'Outros'
     }[c] || c;
 }
